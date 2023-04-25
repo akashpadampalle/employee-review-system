@@ -1,5 +1,6 @@
 const express = require('express');
 const expressLayouts = require('express-ejs-layouts');
+const db = require('./configs/db_connection');
 const PORT  = process.env.PORT || 8000;
 
 const app = express();
@@ -9,7 +10,7 @@ app.use(express.urlencoded()); // handling encoded request body
 
 
 // setting up ejs
-app.set(expressLayouts);
+app.use(expressLayouts);
 app.set('view engine', 'ejs');
 app.set('views', 'views');
 app.set('layout extractStyles', true);
