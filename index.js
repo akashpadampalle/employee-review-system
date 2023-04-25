@@ -7,8 +7,10 @@ const PORT  = process.env.PORT || 8000;
 const app = express();
 
 app.use(express.json()) // parsing json object
-app.use(express.urlencoded()); // handling encoded request body
+app.use(express.urlencoded({extended: true})); // handling encoded request body
 
+
+app.use(express.static(path.join(__dirname, 'public'))); // static | public file 
 
 // setting up ejs
 app.use(expressLayouts);
