@@ -1,0 +1,16 @@
+{
+  "name": "employee-review-system-gradeup",
+  "version": "1.0.0",
+  "description": "Employee Review System - GradeUp is an nodejs project which is as name says it is employee review system / solution website created for coding ninjaj backend skill test",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Akash Padampalle",
+  "license": "ISC",
+  "dependencies": {
+    "ejs": "^3.1.9",
+    "express": "^4.18.2",
+    "mongoose": "^7.0.5"
+  }
+}
