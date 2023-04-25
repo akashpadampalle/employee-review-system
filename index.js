@@ -16,6 +16,8 @@ app.set('layout extractStyles', true);
 app.set('layout extractScripts', true);
 
 
+app.use('/', require('./routes/index'));
+
 
 app.listen(PORT, function(err) {
     if(err){
