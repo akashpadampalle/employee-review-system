@@ -1,0 +1,13 @@
+<header id="body-header">
+    <div id="header-title">GradeUp</div>
+    <div>
+        <% if(locals.user) {%>
+            <span> <%= user.name %> </span>
+            <button>|||</button>
+        <%} else{ %>
+            <a href="/login">login</a>
+            <span>|</span>
+            <a href="signup">signup</a>
+        <% }%>
+    </div>
+</header>
