@@ -1,0 +1,29 @@
+<% if(locals.company) {%>
+<link rel="stylesheet" href="/css/form.css">
+    <div class="form-body">
+        <div class="form-title">Signup Form for Employee </div>
+        <form action="/user/create-user" method="post">
+            <select name="company">
+                <% for(com of company) { %>
+                    <option value="<%=com%>"><%=com%></option>
+                <% }%>
+            </select>
+            <input type="text" name="position" placeholder="position" >
+            <input type="text" name="name" placeholder="name" required>
+            <input type="email" name="email" placeholder="email" required>
+            <input type="password" name="password" placeholder="password" required>
+            <input type="password" name="cpassword" placeholder="confirm password" required>
+            <input type="submit" value="create user">
+        </form>
+    </div>
+<%} else { %>
+    <div>
+        <div class="message">
+            there is no company registered yet <br>
+            there is not point creating employee without company
+        </div>
+        <a href="/create-company">create company</a>
+    </div>
+<% } %>
+
+

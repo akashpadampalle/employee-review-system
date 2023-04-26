@@ -1,0 +1,51 @@
+.form-body{
+    margin: 20px auto;
+    min-width: 300px;
+    max-width: 600px;
+    width: 50%;
+    text-align: center;
+    background: white;
+    padding: 40px;
+
+    border: 1px solid gray;
+    border-radius: 15px;
+    box-shadow: 0 0 10px gray;
+    
+    .form-title{
+        font-size: 1.5rem;
+        font-weight: bold;
+        margin-bottom: 20px;
+    }
+
+
+    form {
+        display: flex;
+        flex-direction: column;
+
+        > * {
+
+            text-align: center;
+
+            border: 1px solid lightgray;
+            border-radius: 10px;
+            box-shadow: 0 0 10px lightgray;
+
+            padding: 10px;
+            margin: 5px;
+        }
+
+        input[type='submit']{
+            min-width: fit-content;
+            max-width: 50%;
+            align-self: center;
+            background: lightgreen;
+            transition: background 1s ease-in-out;
+        }
+
+        input[type='submit']:hover{
+            background: green;
+        }
+
+    }
+    
+}

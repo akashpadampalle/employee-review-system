@@ -1,1 +1,1 @@
-swal('Welcome', 'nice to see you in employee review system', 'info');
+// swal('Welcome', 'nice to see you in employee review system', 'info');

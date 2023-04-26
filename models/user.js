@@ -14,6 +14,14 @@ const userSchema = new  mongoose.Schema({
         type: String,
         required: true
     },
+    rating: {
+        type: Number,
+        default: 0
+    },
+    ratedBy: {
+        type: Number,
+        default: 0
+    },
     type: {
         type: String,
         enum: ['employee', 'admin'],
@@ -25,7 +33,8 @@ const userSchema = new  mongoose.Schema({
         required: true
     },
     position: {
-        type: String
+        type: String,
+        default: 'Not defined'
     },
     AdminRank: {
         type: Number,
@@ -34,6 +43,7 @@ const userSchema = new  mongoose.Schema({
     pedingFeedbacks: [
         {
             type: mongoose.Schema.Types.ObjectId, 
+            ref: 'feedback',
             required: true
         }
     ]

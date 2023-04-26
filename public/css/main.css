@@ -1,5 +1,28 @@
+* {
+  padding: 0px;
+  margin: 0px;
+  box-sizing: border-box;
+}
+
 body {
-  background: palegoldenrod;
+  background: url("/images/background.png");
+  background-size: cover;
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+}
+
+#main-body {
+  min-height: 92vh;
+}
+
+#body-header {
+  color: white;
+  background: gray;
+}
+
+#body-footer {
+  color: white;
+  background: gray;
 }
 
 /*# sourceMappingURL=main.css.map */
