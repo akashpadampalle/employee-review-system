@@ -1,0 +1,1 @@
+swal('Welcome', 'nice to see you in employee review system', 'info');
