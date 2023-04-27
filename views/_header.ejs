@@ -2,8 +2,11 @@
     <div id="header-title">GradeUp</div>
     <div>
         <% if(locals.user) {%>
+            <% if(user.type == 'admin') { %>
+                <a href="/user/admin-panel"> Admin Panel </a>
+            <% } %>
             <span> <%= user.name %> </span>
-            <button>|||</button>
+            <a href="/user/logout"><i class="fa-solid fa-arrow-right-from-bracket"></i></a>
         <%} else{ %>
             <a href="/login">login</a>
             <span>|</span>

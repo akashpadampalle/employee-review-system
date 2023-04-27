@@ -2,15 +2,38 @@ const express = require('express');
 const expressLayouts = require('express-ejs-layouts');
 const path = require('path');
 const db = require('./configs/db_connection');
+
+// session and passport
+const passport = require('passport');
+const localStrategy = require('./configs/passport_local_strategy');
+const session = require('express-session');
+const MongoStore = require('connect-mongo');
+const cookieParser = require('cookie-parser');
+
 const PORT  = process.env.PORT || 8000;
 
 const app = express();
 
 app.use(express.json()) // parsing json object
 app.use(express.urlencoded({extended: true})); // handling encoded request body
-
+app.use(cookieParser()); 
 
 app.use(express.static(path.join(__dirname, 'public'))); // static | public file 
+
+app.use(session({
+    name: 'GradeUp - ERS',
+    saveUninitialized: false,
+    resave: false,
+    secret: 'veryverysecretekey',
+    cookie: {
+        maxAge: 1000*60*60*24 // one day
+    },
+    store: MongoStore.create({
+        mongoUrl: 'mongodb://127.0.0.1:27017/gradeUpDB',
+        collectionName: 'session',
+        autoRemove: 'native'
+    })
+}))
 
 // setting up ejs
 app.use(expressLayouts);

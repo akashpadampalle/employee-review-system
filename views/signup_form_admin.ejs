@@ -2,14 +2,18 @@
 
 <div class="form-body" >
     <div class="form-title">Create A Company</div>
-    <form action="/user/create-company">
+    <form id="createCompanyForm">
         <input type="text" name="name" placeholder="admin name"  required>
         <input type="email" name="email" placeholder="email" required>
         <input type="password" name="password" placeholder="password" required>
         <input type="password" name="cpassword" placeholder="confirm password" required>
         <input type="text" name="position" placeholder="position" >
         <input type="text" name="company" placeholder="new company name" required>
-        <textarea name="descriptio" rows="5" placeholder="Enter company description..."></textarea>
-        <input type="submit" value="create company">
+        <textarea name="description" rows="5" placeholder="Enter company description..."></textarea>
+        <!-- <input type="submit" value="create company"> -->
+        <button type="submit"> <span class="title">Create company</span>  <i class="fa-regular fa-square-plus"></i></i> </button>
     </form>
 </div>
+
+
+<script src="/js/createCompany.js"></script>

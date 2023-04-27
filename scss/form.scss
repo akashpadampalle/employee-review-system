@@ -32,18 +32,30 @@
 
             padding: 10px;
             margin: 5px;
+
         }
 
-        input[type='submit']{
-            min-width: fit-content;
-            max-width: 50%;
+        button{
+            width: fit-content;
+            padding: 0px;
             align-self: center;
+            margin-top: 20px;
             background: lightgreen;
-            transition: background 1s ease-in-out;
+
+            .title{
+                padding: 10px;
+            }
+
+            i {
+                padding: 10px;
+                border-left: 1px solid gray;
+            }
+
+
         }
 
-        input[type='submit']:hover{
-            background: green;
+        textarea {
+            resize: none;
         }
 
     }

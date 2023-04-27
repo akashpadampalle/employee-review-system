@@ -27,15 +27,22 @@
   padding: 10px;
   margin: 5px;
 }
-.form-body form input[type=submit] {
-  min-width: fit-content;
-  max-width: 50%;
+.form-body form button {
+  width: fit-content;
+  padding: 0px;
   align-self: center;
+  margin-top: 20px;
   background: lightgreen;
-  transition: background 1s ease-in-out;
 }
-.form-body form input[type=submit]:hover {
-  background: green;
+.form-body form button .title {
+  padding: 10px;
+}
+.form-body form button i {
+  padding: 10px;
+  border-left: 1px solid gray;
+}
+.form-body form textarea {
+  resize: none;
 }
 
 /*# sourceMappingURL=form.css.map */
