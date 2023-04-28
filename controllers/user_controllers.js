@@ -333,7 +333,7 @@ module.exports.assignFeedback = async function (req, res) {
     }
 
     
-    const updatedUser = await User.findByIdAndUpdate(feedbackGiverId, {$push: {pendingFeedbacks: feedbackRecieverId}});
+    const updatedUser = await User.findByIdAndUpdate(feedbackGiverId, {pendingFeedbacks: {$push: feedbackRecieverId}});
 
     if(!updatedUser){
         throw new Error('unable to assign feedback');
@@ -396,7 +396,6 @@ module.exports.promotToAdmin = async function (req, res){
             data: []
         });
     }
-
 }
 
 module.exports.demoteFromAdmin = async function (req, res){
