@@ -13,7 +13,7 @@ router.get('/create-company', basicControlls.renderCreateCompanyForm);
 router.get('/login', basicControlls.renderLoginForm);
 
 // TODO
-// router.post('/login');
+router.post('/login', passport.authenticate('local', {successRedirect: 'user/employee-view'}));
 
 
 router.use('/user', userRoutes);

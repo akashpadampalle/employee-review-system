@@ -452,7 +452,26 @@ module.exports.demoteFromAdmin = async function (req, res){
 
 }
 
-module.exports.employeeView = function (req, res) {
+module.exports.logout = function (req, res) {
+    req.logout( (err) => {
+        if(err){
+            console.log(err);
+            return res.redirect('back');
+        }
+    })
+
+    return res.redirect('/login');
+}
+
+module.exports.employeeView = async  function (req, res) {
+
+    const user = await User.findById(req.user.id)
+                .select('-password')
+                .populate('company')
+                .populate('pendingFeedbacks');
+
+    res.locals.user = user;
+
     res.render('employee_view', { 'title': 'employee view' });
 }
 
