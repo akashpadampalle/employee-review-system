@@ -399,6 +399,60 @@ module.exports.promotToAdmin = async function (req, res){
 
 }
 
+module.exports.demoteFromAdmin = async function (req, res){
+
+    try {
+        
+        const {userId} = req.body;
+    
+        if(!userId){
+            return res.status(401).json({
+                message: 'Empty field recieved',
+                status: 'failure',
+                data: []
+            });
+        }
+    
+        const user = User.findById(userId);
+    
+        if(!user){
+            return res.status(404).json({
+                message: 'Invalid user',
+                status: 'failure',
+                data: []
+            });
+        }
+    
+        if(req.user.type != 'admin' || req.user.adminRank >= user.adminRank){
+            return res.status(401).json({
+                message: 'Unauthorized request recieved',
+                status: 'failure',
+                data: []
+            });
+        }
+    
+        const updatedUser = await User.findByIdAndUpdate(userId, {type: 'employee', adminRank: Number.MAX_VALUE});
+    
+        if(!updatedUser){
+            throw new Error('Unable to demote from admin');
+        }
+    
+        return res.status(200).json({
+            message: 'User demoted successfully',
+            status: 'successful',
+            data: []
+        });
+    } catch (error) {
+        console.log('Error: demote user ', error);
+        return res.status(500).json({
+            message: 'Internal Server Error',
+            status: 'failure',
+            data: [] 
+        });
+    }
+
+}
+
 module.exports.employeeView = function (req, res) {
     res.render('employee_view', { 'title': 'employee view' });
 }
