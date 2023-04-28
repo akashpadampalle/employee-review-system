@@ -29,27 +29,27 @@ const userSchema = new  mongoose.Schema({
     },
     company: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'company',
+        ref: 'Company',
         required: true
     },
     position: {
         type: String,
         default: 'Not defined'
     },
-    AdminRank: {
+    adminRank: {
         type: Number,
         default: Number.MAX_VALUE
     },
-    pedingFeedbacks: [
+    pendingFeedbacks: [
         {
             type: mongoose.Schema.Types.ObjectId, 
-            ref: 'feedback',
+            ref: 'User',
             required: true
         }
     ]
 }, {timestamps: true});
 
 
-const User = mongoose.model('user', userSchema);
+const User = mongoose.model('User', userSchema);
 
 module.exports = User;

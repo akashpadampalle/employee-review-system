@@ -5,7 +5,7 @@
             <% if(user.type == 'admin') { %>
                 <a href="/user/admin-panel"> Admin Panel </a>
             <% } %>
-            <span> <%= user.name %> </span>
+            <button id="user-profile-btn"> <%= user.name %> </button>
             <a href="/user/logout"><i class="fa-solid fa-arrow-right-from-bracket"></i></a>
         <%} else{ %>
             <a href="/login">login</a>

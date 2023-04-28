@@ -8,7 +8,11 @@ module.exports.renderIndexPage = function (req, res){
 module.exports.renderEmployeeSignUpForm = async function(req, res){
     const company = await Company.find({});
 
-    res.render('signup_form_employee', {company});
+    if(company.length > 0){
+        return res.render('signup_form_employee', {company});
+    }
+
+    res.render('signup_form_employee');
 }
 
 module.exports.renderCreateCompanyForm = function(req, res){
