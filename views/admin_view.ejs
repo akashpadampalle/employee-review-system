@@ -1,0 +1,23 @@
+<div id="admin-container">
+    <%if(locals.user) { %>
+        <div class="company-name" id="<%= user.company._id %>">
+            <%= user.company.name %>
+        </div>
+        <div class="employee-container">
+            <% for(let i=0; i < user.company.users.length; i++) { %>
+                <div class="employee-item" id="<% user.company.users[i]._id %>">
+                    <div class="employee-name">
+                        <%= user.company.users[i].name %>
+                    </div>
+                    <div class="employee-rating">
+                        <span class="rating-number">
+                            <%= user.company.users[i].rating %>
+                        </span>
+                        <span class="rating-number"> ( <%= user.company.users[i].ratedBy %> ) </span>
+                    </div>
+                </div>
+                <% } %>
+        </div>
+
+        <% } %>
+</div>

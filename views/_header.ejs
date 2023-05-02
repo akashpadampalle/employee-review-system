@@ -2,17 +2,19 @@
     <div id="header-title">GradeUp</div>
     <div>
         <% if(locals.user) {%>
-            <% if(user.type == 'admin') { %>
-                <a href="/user/admin-panel"> Admin Panel </a>
-            <% } %>
-            <button id="user-profile-btn"> <%= user.name %> </button>
-            <a href="/user/logout"><i class="fa-solid fa-arrow-right-from-bracket"></i></a>
-        <%} else{ %>
-            <a href="/login">login</a>
-            <span>|</span>
-            <a href="/employee-sign-up">Employee Signup</a>
-            <span>|</span>
-            <a href="/create-company">Create Company</a>
-        <% }%>
+            <% if(user.type=='admin' ) { %>
+                <a href="/user/admin-view"> Admin Panel </a>
+                <% } %>
+                    <button id="user-profile-btn">
+                        <%= user.name %>
+                    </button>
+                    <a href="/user/logout"><i class="fa-solid fa-arrow-right-from-bracket"></i></a>
+                    <%} else{ %>
+                        <a href="/login">login</a>
+                        <span>|</span>
+                        <a href="/employee-sign-up">Employee Signup</a>
+                        <span>|</span>
+                        <a href="/create-company">Create Company</a>
+                        <% }%>
     </div>
 </header>

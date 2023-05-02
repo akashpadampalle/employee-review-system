@@ -150,6 +150,9 @@ module.exports.createEmployee = async function (req, res) {
             throw new Error('unable to create new user');
         }
 
+
+        await Company.findOneAndUpdate({ 'name': company }, { users: { $push: newUser._id } });
+
         newUser.password = undefined;
 
         res.status(200).json({
@@ -332,10 +335,10 @@ module.exports.assignFeedback = async function (req, res) {
         });
     }
 
-    
-    const updatedUser = await User.findByIdAndUpdate(feedbackGiverId, {pendingFeedbacks: {$push: feedbackRecieverId}});
 
-    if(!updatedUser){
+    const updatedUser = await User.findByIdAndUpdate(feedbackGiverId, { pendingFeedbacks: { $push: feedbackRecieverId } });
+
+    if (!updatedUser) {
         throw new Error('unable to assign feedback');
     }
 
@@ -344,7 +347,7 @@ module.exports.assignFeedback = async function (req, res) {
         message: 'successfully assign feedback',
         status: 'successful',
         data: []
-    });return res.status(401).json({
+    }); return res.status(401).json({
         message: 'empty field recieved',
         status: 'failure',
         data: []
@@ -353,36 +356,36 @@ module.exports.assignFeedback = async function (req, res) {
 }
 
 
-module.exports.promotToAdmin = async function (req, res){
+module.exports.promotToAdmin = async function (req, res) {
 
     try {
-        
-        const {userId} = req.body;
-    
+
+        const { userId } = req.body;
+
         const user = await User.findById(userId);
-    
-        if(!user){
+
+        if (!user) {
             return res.status(404).json({
                 message: 'Invalid User',
                 status: 'failure',
                 data: []
             });
         }
-    
-        if(req.user.type != 'admin' || req.user.adminRank >= user.adminRank){
+
+        if (req.user.type != 'admin' || req.user.adminRank >= user.adminRank) {
             return res.status(404).json({
                 message: 'Unauthorized request recieved',
                 status: 'failure',
                 data: []
             });
         }
-    
-        const updateUser = await User.findByIdAndUpdate(userId, {'type': 'admin', 'adminRank': req.user.adminRank+1});
-    
-        if(!updateUser){
+
+        const updateUser = await User.findByIdAndUpdate(userId, { 'type': 'admin', 'adminRank': req.user.adminRank + 1 });
+
+        if (!updateUser) {
             throw new Error('Unable to Promote User');
         }
-    
+
         return res.status(200).json({
             message: 'user promoted successfully',
             status: 'successful',
@@ -398,44 +401,44 @@ module.exports.promotToAdmin = async function (req, res){
     }
 }
 
-module.exports.demoteFromAdmin = async function (req, res){
+module.exports.demoteFromAdmin = async function (req, res) {
 
     try {
-        
-        const {userId} = req.body;
-    
-        if(!userId){
+
+        const { userId } = req.body;
+
+        if (!userId) {
             return res.status(401).json({
                 message: 'Empty field recieved',
                 status: 'failure',
                 data: []
             });
         }
-    
+
         const user = User.findById(userId);
-    
-        if(!user){
+
+        if (!user) {
             return res.status(404).json({
                 message: 'Invalid user',
                 status: 'failure',
                 data: []
             });
         }
-    
-        if(req.user.type != 'admin' || req.user.adminRank >= user.adminRank){
+
+        if (req.user.type != 'admin' || req.user.adminRank >= user.adminRank) {
             return res.status(401).json({
                 message: 'Unauthorized request recieved',
                 status: 'failure',
                 data: []
             });
         }
-    
-        const updatedUser = await User.findByIdAndUpdate(userId, {type: 'employee', adminRank: Number.MAX_VALUE});
-    
-        if(!updatedUser){
+
+        const updatedUser = await User.findByIdAndUpdate(userId, { type: 'employee', adminRank: Number.MAX_VALUE });
+
+        if (!updatedUser) {
             throw new Error('Unable to demote from admin');
         }
-    
+
         return res.status(200).json({
             message: 'User demoted successfully',
             status: 'successful',
@@ -446,15 +449,15 @@ module.exports.demoteFromAdmin = async function (req, res){
         return res.status(500).json({
             message: 'Internal Server Error',
             status: 'failure',
-            data: [] 
+            data: []
         });
     }
 
 }
 
 module.exports.logout = function (req, res) {
-    req.logout( (err) => {
-        if(err){
+    req.logout((err) => {
+        if (err) {
             console.log(err);
             return res.redirect('back');
         }
@@ -463,15 +466,27 @@ module.exports.logout = function (req, res) {
     return res.redirect('/login');
 }
 
-module.exports.employeeView = async  function (req, res) {
+module.exports.employeeView = async function (req, res) {
 
     const user = await User.findById(req.user.id)
-                .select('-password')
-                .populate('company')
-                .populate('pendingFeedbacks');
+        .select('-password')
+        .populate('company')
+        .populate('pendingFeedbacks');
 
     res.locals.user = user;
 
     res.render('employee_view', { 'title': 'employee view' });
 }
 
+
+module.exports.adminView = async function (req, res) {
+    if (req.user.type != 'admin') {
+        res.redirect('/user/employee-view');
+    }
+
+    const user = await User.findById(req.user.id).populate({ path: 'company', populate: { path: 'users' } });
+    console.log(typeof (user.company.users));
+    req.user = user;
+
+    res.render('admin_view', { title: 'Admin | Grade Up' });
+}

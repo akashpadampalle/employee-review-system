@@ -5,17 +5,18 @@ const companySchema = new mongoose.Schema({
         type: String,
         required: true
     },
-    description: String,
+    description: {
+        type: String
+    },
     users: [
         {
             type: mongoose.Schema.Types.ObjectId,
-            ref: 'user',
-            required: true
+            ref: 'User',
         }
     ]
 
-},{
-    timestamps:true
+}, {
+    timestamps: true
 });
 
 
