@@ -11,13 +11,13 @@ app.use(express.json()); // convert json into javascript object
 app.use(express.urlencoded()); // decode encoded url request from client
 
 // ejs setup
-app.use(expressLayouts());
+app.use(expressLayouts);
 app.set('view engine', 'ejs');
 app.set('views', 'views');
 
 // extract scripts and styles from webpage body
-app.set('extractStyles', true);
-app.set('extractScripts', true);
+app.set('layout extractStyles', true);
+app.set('layout extractScripts', true);
 
 
 app.use('/', require('./routes/index')); // setting up routing file

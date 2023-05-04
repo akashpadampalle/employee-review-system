@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 
-const url = 'mongodb://127.0.0.1:2717/employee_review_system';
+const url = 'mongodb://127.0.0.1:27017/employee_review_system';
 mongoose.connect(url);
 
 const db = mongoose.connection;
