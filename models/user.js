@@ -19,7 +19,7 @@ const userSchema = new mongoose.Schema({
         required: true,
         enum: ['employee', 'admin']
     },
-    AdminRank: {
+    adminRank: {
         type: Number,
         default: Number.MAX_VALUE
     },

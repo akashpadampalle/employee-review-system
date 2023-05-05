@@ -1,10 +1,14 @@
-
+const Company = require('../models/company');
 
 module.exports.renderHomePage = function (req, res) {
     res.render('home', { title: 'ERS | home' });
 }
 
-module.exports.renderSignInPage = function (req, res) {
+module.exports.renderSignInPage = async function (req, res) {
+    const company = await Company.find({}).select('-employees');
+    if (company) {
+        res.locals.company = company;
+    }
     res.render('signin', { title: 'ERS | signin' });
 }
 

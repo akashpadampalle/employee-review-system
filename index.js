@@ -18,7 +18,7 @@ const PORT = process.env.PORT || 8000;
 const app = express();
 
 app.use(express.json()); // convert json into javascript object
-app.use(express.urlencoded()); // decode encoded url request from client
+app.use(express.urlencoded({ extended: true })); // decode encoded url request from client
 app.use(cookieParser());
 
 // session setup
@@ -31,8 +31,7 @@ app.use(session({
         maxAge: 1000 * 60 * 60 * 24,
     },
     store: MongoStore.create({
-        // mongoUrl: 'mongodb://127.0.0.1:27017/employee_review_system',
-        client: db,
+        mongoUrl: 'mongodb://127.0.0.1:27017/employee_review_system',
         collectionName: 'session',
         autoRemove: 'native'
     })
