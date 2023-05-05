@@ -2,6 +2,16 @@ const express = require('express');
 const expressLayouts = require('express-ejs-layouts');
 const db = require('./configs/db_connection');
 
+
+//passport and session requirements
+const passport = require('passport');
+const localStrategy = require('./configs/passport_local_strategy');
+const cookieParser = require('cookie-parser');
+const session = require('express-session');
+const MongoStore = require('connect-mongo');
+
+
+
 const PORT = process.env.PORT || 8000;
 
 
@@ -9,6 +19,29 @@ const app = express();
 
 app.use(express.json()); // convert json into javascript object
 app.use(express.urlencoded()); // decode encoded url request from client
+app.use(cookieParser());
+
+// session setup
+app.use(session({
+    name: 'ERS',
+    secret: 'somescrete',
+    saveUninitialized: false,
+    resave: false,
+    cookie: {
+        maxAge: 1000 * 60 * 60 * 24,
+    },
+    store: MongoStore.create({
+        // mongoUrl: 'mongodb://127.0.0.1:27017/employee_review_system',
+        client: db,
+        collectionName: 'session',
+        autoRemove: 'native'
+    })
+}))
+
+
+app.use(passport.initialize());
+app.use(passport.session());
+app.use(passport.setAuthenticatedUser);
 
 // ejs setup
 app.use(expressLayouts);
