@@ -1,4 +1,9 @@
 <main>
+
+    <div id="warnings-by-server">
+
+    </div>
+
     <div class="alert alert-warning alert-dismissible fade show" role="alert">
         while creating company we create admin along side it to manage company
         <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
@@ -8,7 +13,7 @@
         <div class="card-body">
             <h5 class="card-title">Creat Company</h5>
             <p class="card-text">
-            <form>
+            <form id="create_company_form">
                 <input type="text" class="form-control mb-3" name="name" placeholder="name" required>
                 <input type="email" class="form-control mb-3" name="email" placeholder="email" required>
                 <input type="password" class="form-control mb-3" name="password" placeholder="password" required>
@@ -26,5 +31,7 @@
         </div>
     </div>
 
+
+    <script src="/js/create_company.js"></script>
 
 </main>

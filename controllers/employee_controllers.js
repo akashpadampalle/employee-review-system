@@ -8,7 +8,7 @@ module.exports.createEmployee = async function (req, res) {
         const { name, email, password, cpassword, company } = req.body;
 
         if (!name || !email || !password || !company) {
-            return res.status(400).json({
+            return res.json({
                 message: 'Empty field recieved',
                 status: 'failure',
                 data: []
@@ -16,7 +16,7 @@ module.exports.createEmployee = async function (req, res) {
         }
 
         if (password != cpassword) {
-            return res.status(400).json({
+            return res.json({
                 message: 'password and confirm password are not matching',
                 status: 'failure',
                 data: []
@@ -26,7 +26,7 @@ module.exports.createEmployee = async function (req, res) {
         const isUserPresent = await User.findOne({ 'email': email });
 
         if (isUserPresent) {
-            return res.status(401).json({
+            return res.json({
                 message: 'User is already present with same email',
                 status: 'failure',
                 data: []
@@ -36,7 +36,7 @@ module.exports.createEmployee = async function (req, res) {
         const existingCompany = await Company.findOne({ 'name': company });
 
         if (!existingCompany) {
-            return res.status(404).json({
+            return res.json({
                 message: `${company} company is not registered`,
                 status: 'failure',
                 data: []
@@ -58,10 +58,10 @@ module.exports.createEmployee = async function (req, res) {
         }
 
         // adding user entry inside company
-        await Company.findByIdAndUpdate(existingCompany._id, { 'employees': { $push: user._id } });
+        await Company.findByIdAndUpdate(existingCompany._id, { $push: { 'employees': user._id } });
 
 
-        return res.status(400).json({
+        return res.json({
             message: `successfully create employee and added into ${company} company`,
             status: 'successful',
             data: [{
@@ -72,7 +72,7 @@ module.exports.createEmployee = async function (req, res) {
 
     } catch (error) {
         console.log('Error: creating user', error);
-        return res.status(500).json({
+        return res.json({
             message: 'Internal server error',
             status: 'failure',
             data: []
@@ -122,7 +122,7 @@ module.exports.createCompany = async function (req, res) {
             });
         }
 
-        const company = await User.create({
+        const company = await Company.create({
             'name': companyName,
             'description': companyDescription
         });
@@ -138,14 +138,14 @@ module.exports.createCompany = async function (req, res) {
             'password': password,
             'type': 'admin',
             'adminRank': 1,
-            'company': company._id
+            'company': company.id
         });
 
         if (!user) {
             throw new Error('unable to create user (create company) :: unknown error');
         }
 
-        await Company.findByIdAndUpdate(company._id, { 'employees': { $push: user._id } });
+        await Company.findByIdAndUpdate(company._id, { $push: { 'employees': user.id } });
 
         return res.status(200).json({
             message: 'user created successfully',

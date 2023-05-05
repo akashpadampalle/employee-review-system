@@ -1,5 +1,6 @@
 const express = require('express');
 const expressLayouts = require('express-ejs-layouts');
+const path = require('path');
 const db = require('./configs/db_connection');
 
 
@@ -20,6 +21,9 @@ const app = express();
 app.use(express.json()); // convert json into javascript object
 app.use(express.urlencoded({ extended: true })); // decode encoded url request from client
 app.use(cookieParser());
+
+// static file
+app.use(express.static(path.join(__dirname, 'public')));
 
 // session setup
 app.use(session({
