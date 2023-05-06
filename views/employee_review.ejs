@@ -1,0 +1,27 @@
+<main>
+    <% if(locals.empDetail){ %>
+
+        <div class="border rounded">
+            <div class="ps-3 border" >
+                <div id="employee-name"> <span>name: </span>  <span> <%= empDetail.name %> </span></div>
+                <div id="employee-email"> <span>email: </span>  <span> </span><%= empDetail.email %> </span></div>
+                <div id="employee-type"> <span>type: </span>  <span> </span><%= empDetail.type %></span></div>
+                <% if (empDetail.type == 'admin') { %>
+                    <div id="employee-adminRank"> <span>adminRank: </span>  <span> </span><%= empDetail.adminRank %> </span></div>
+                <% } %>
+                <div id="employee-company" > <span>company: </span>  <span> </span> <%= empDetail.company.name %></span></div>
+                <div id="employee-rating"> <span>rating: </span>  <span> </span> <%= empDetail.rating %> (<%= empDetail.feedbackRecieved.length %>)</span></div>
+
+            </div>
+            <div class="m-3 d-flex justify-content-evenly">
+                <button type="button" class="btn btn-success" id="assign-feedback-btn"> Ask for feedbacks </button>
+                <button type="button" class="btn btn-danger" id="delete-employee-btn">Delete Employee</button>
+            </div>
+        </div>
+
+    <% } else { %>
+        <div class="alert alert-danger" role="alert">
+            unable to get Employee details
+        </div>
+    <% } %>
+</main>

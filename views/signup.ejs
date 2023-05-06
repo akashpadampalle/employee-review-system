@@ -2,12 +2,16 @@
 
     <% if(locals.company) { %>
 
+        <div id="warnings-by-server">
+
+        </div>
+
 
         <div class="card text-center" style="width: 25rem; margin: auto;">
             <div class="card-body">
                 <h5 class="card-title">Sign up</h5>
                 <p class="card-text">
-                <form>
+                <form id="create_employee_form"> 
                     <div class="mb-3">
                         <select class="form-select" name="company">
                             <% for(let com of company) { %>
@@ -27,6 +31,7 @@
             </div>
         </div>
 
+        <script src="/js/create_employee.js"></script>
 
 
     <%} else { %>

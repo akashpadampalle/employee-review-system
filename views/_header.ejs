@@ -21,13 +21,21 @@
                         </li>
                     <% } else { %>
                         <li class="nav-item">
-                            <a class="nav-link" href="/user/signout">Sign Out</a>
+                            <a class="nav-link btn btn-primary" href="/signout">Sign Out</a>
                         </li>
-                        <%if(user.type=='admin' ) {%>
+
+                        <%if(locals.admin) {%>
                             <li class="nav-item">
                                 <a class="nav-link btn btn-primary" href="/user/admin">Admin Panel</a>
                             </li>
                         <% } %>
+
+                        <%if(locals.employee) {%>
+                            <li class="nav-item">
+                                <a class="nav-link btn btn-primary" href="/user/employee">Employee View</a>
+                            </li>
+                        <% } %>
+            
                     <%}%>
                 </ul>
             </div>

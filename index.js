@@ -23,7 +23,6 @@ app.use(express.urlencoded({ extended: true })); // decode encoded url request f
 app.use(cookieParser());
 
 // static file
-app.use(express.static(path.join(__dirname, 'public')));
 
 // session setup
 app.use(session({
@@ -39,12 +38,15 @@ app.use(session({
         collectionName: 'session',
         autoRemove: 'native'
     })
-}))
+}));
 
 
 app.use(passport.initialize());
 app.use(passport.session());
 app.use(passport.setAuthenticatedUser);
+
+
+app.use(express.static(path.join(__dirname, 'public')));
 
 // ejs setup
 app.use(expressLayouts);

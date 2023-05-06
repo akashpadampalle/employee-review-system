@@ -1,16 +1,16 @@
-console.log('create company scipt loaded');
+console.log('create employee form script loaded');
 
-const formCreateCompany = document.getElementById("create-company-form");
+const createEmployeeForm = document.getElementById('create_employee_form');
 const warningDiv = document.getElementById("warnings-by-server");
 
-formCreateCompany.addEventListener('submit', async (e) => {
+createEmployeeForm.addEventListener('submit', async (e) => {
     e.preventDefault();
 
-    const formData = new FormData(formCreateCompany);
+    const formData = new FormData(createEmployeeForm);
     const data = Object.fromEntries(formData.entries());
     const jsonData = JSON.stringify(data);
 
-    const response = await fetch('/create-company', {
+    const response = await fetch('/create-employee', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
@@ -22,10 +22,12 @@ formCreateCompany.addEventListener('submit', async (e) => {
 
     console.log(result);
 
+    console.log(result);
+
     if (result.status == 'successful') {
-        formCreateCompany.reset();
+        createEmployeeForm.reset();
         warningDiv.innerHTML = `<div class="alert alert-success alert-dismissible fade show" role="alert">
-            user and associated company created successfully <br/>
+            user created successfully <br/>
             <a href="/signin" class="btn btn-primary my-3">SignIn Now</a>
         <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
       </div>`;

@@ -2,13 +2,14 @@ const Company = require('../models/company');
 const User = require('../models/user');
 
 
+
 module.exports.createEmployee = async function (req, res) {
     try {
 
         const { name, email, password, cpassword, company } = req.body;
 
         if (!name || !email || !password || !company) {
-            return res.json({
+            return res.status(404).json({
                 message: 'Empty field recieved',
                 status: 'failure',
                 data: []
@@ -16,7 +17,7 @@ module.exports.createEmployee = async function (req, res) {
         }
 
         if (password != cpassword) {
-            return res.json({
+            return res.status(401).json({
                 message: 'password and confirm password are not matching',
                 status: 'failure',
                 data: []
@@ -26,7 +27,7 @@ module.exports.createEmployee = async function (req, res) {
         const isUserPresent = await User.findOne({ 'email': email });
 
         if (isUserPresent) {
-            return res.json({
+            return res.status(401).json({
                 message: 'User is already present with same email',
                 status: 'failure',
                 data: []
@@ -36,7 +37,7 @@ module.exports.createEmployee = async function (req, res) {
         const existingCompany = await Company.findOne({ 'name': company });
 
         if (!existingCompany) {
-            return res.json({
+            return res.status(404).json({
                 message: `${company} company is not registered`,
                 status: 'failure',
                 data: []
@@ -61,7 +62,7 @@ module.exports.createEmployee = async function (req, res) {
         await Company.findByIdAndUpdate(existingCompany._id, { $push: { 'employees': user._id } });
 
 
-        return res.json({
+        return res.status(200).json({
             message: `successfully create employee and added into ${company} company`,
             status: 'successful',
             data: [{
@@ -72,7 +73,7 @@ module.exports.createEmployee = async function (req, res) {
 
     } catch (error) {
         console.log('Error: creating user', error);
-        return res.json({
+        return res.status(500).json({
             message: 'Internal server error',
             status: 'failure',
             data: []
@@ -166,4 +167,165 @@ module.exports.createCompany = async function (req, res) {
     }
 
 
+}
+
+
+module.exports.singout = function (req, res) {
+    req.logout((err) => {
+        console.log(err);
+    });
+    res.redirect('/signin');
+}
+
+
+module.exports.adminPanel = async function (req, res) {
+
+    if (req.user.type == 'employee') {
+        return res.redirect('/user/employee');
+    }
+
+    const company = req.user.company;
+
+    const com = await Company.findById(company).populate('employees');
+    let employees = com.employees;
+
+    employees = employees.filter((employee) => {
+        employee.password = undefined;
+        return req.user.adminRank < employee.adminRank
+    })
+
+    return res.render('admin_panel', { 'title': 'ERS | Admin Panel', 'employeesArr': employees, 'employee': true })
+
+}
+
+
+module.exports.makeAdmin = async function (req, res) {
+    try {
+
+        const user = req.user;
+        const { employeeId } = req.body;
+
+        const employee = await User.findById(employeeId).select('-password');
+
+        if (!employee) {
+            return res.status(404).json({
+                message: 'Unable to find employee',
+                status: 'failure',
+                data: []
+            });
+        }
+
+        if (user.type != 'admin' || user.adminRank >= employee.adminRank) {
+            return res.status(401).json({
+                message: 'Unauthorized request',
+                status: 'failure',
+                data: []
+            });
+        }
+
+        await User.findByIdAndUpdate(employeeId, { 'type': 'admin', 'adminRank': user.adminRank + 1 });
+
+        return res.status(200).json({
+            message: `${employee.name} promoted to admin`,
+            status: 'successful',
+            data: []
+        });
+
+    } catch (error) {
+        console.log('Error: Make Admin', error);
+        res.status(500).json({
+            message: 'Internal Server Error',
+            status: 'failure',
+            data: []
+        });
+    }
+}
+
+
+module.exports.makeEmployee = async function (req, res) {
+    try {
+
+        const user = req.user;
+        const { employeeId } = req.body;
+
+        const employee = await User.findById(employeeId).select('-password');
+
+        if (!employee) {
+            return res.status(404).json({
+                message: 'Unable to find employee',
+                status: 'failure',
+                data: []
+            });
+        }
+
+        if (user.type != 'admin' || user.adminRank >= employee.adminRank) {
+            return res.status(401).json({
+                message: 'Unauthorized request',
+                status: 'failure',
+                data: []
+            });
+        }
+
+        await User.findByIdAndUpdate(employeeId, { 'type': 'employee', 'adminRank': Number.MAX_VALUE });
+
+        return res.status(200).json({
+            message: `${employee.name} demoted to employee`,
+            status: 'successful',
+            data: []
+        });
+
+    } catch (error) {
+        console.log('Error: Make Employee', error);
+        res.status(500).json({
+            message: 'Internal Server Error',
+            status: 'failure',
+            data: []
+        });
+    }
+}
+
+
+module.exports.employeeReview = async function (req, res) {
+    try {
+
+        const user = req.user;
+
+        const employeeId = req.params.id;
+        console.log(employeeId);
+
+        const employee = await User.findById(employeeId)
+            .select('-password').populate('company');
+
+        if (!employee) {
+            return res.status(404).json({
+                message: 'Unable to find employee',
+                status: 'failure',
+                data: []
+            });
+        }
+
+        if (user.type != 'admin' || user.adminRank >= employee.adminRank || user.company != employee.company.id) {
+            return res.status(401).json({
+                message: 'Unauthorized request',
+                status: 'failure',
+                data: []
+            });
+        }
+
+
+        res.render('employee_review', {
+            'title': 'ERS | Employee Review',
+            'employee': true,
+            'admin': true,
+            'empDetail': employee
+        })
+
+    } catch (error) {
+        console.log('Error: Employee Review', error);
+        res.status(500).json({
+            message: 'Internal Server Error',
+            status: 'failure',
+            data: []
+        });
+    }
 }

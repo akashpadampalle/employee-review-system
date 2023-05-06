@@ -4,15 +4,17 @@ module.exports.renderHomePage = function (req, res) {
     res.render('home', { title: 'ERS | home' });
 }
 
-module.exports.renderSignInPage = async function (req, res) {
-    const company = await Company.find({}).select('-employees');
-    if (company) {
-        res.locals.company = company;
-    }
+module.exports.renderSignInPage = function (req, res) {
     res.render('signin', { title: 'ERS | signin' });
 }
 
-module.exports.renderSignUpPage = function (req, res) {
+module.exports.renderSignUpPage = async function (req, res) {
+    const company = await Company.find({}).select('-employees');
+
+    if (company) {
+        res.locals.company = company;
+    }
+
     res.render('signup', { title: 'ERS | signup' });
 }
 

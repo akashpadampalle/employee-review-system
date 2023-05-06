@@ -9,6 +9,7 @@ passport.use(new localStrategy({
 },
     async (email, password, done) => {
 
+
         try {
             // find user by its email ID
             const user = await User.findOne({ email: email });
@@ -30,6 +31,8 @@ passport.serializeUser((user, done) => {
 
 
 passport.deserializeUser(async (id, done) => {
+
+
     try {
         const user = await User.findById(id);
         if (!user) { return done(new Error('unable to find user '), false); }
@@ -43,7 +46,7 @@ passport.deserializeUser(async (id, done) => {
 
 passport.checkAuthentication = function (req, res, next) {
     if (req.isAuthenticated()) { return next(); }
-    return res.redirect('/login');
+    return res.redirect('/signin');
 }
 
 
