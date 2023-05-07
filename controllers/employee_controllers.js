@@ -291,10 +291,11 @@ module.exports.employeeReview = async function (req, res) {
         const user = req.user;
 
         const employeeId = req.params.id;
-        console.log(employeeId);
 
         const employee = await User.findById(employeeId)
-            .select('-password').populate('company');
+            .select('-password').populate({ path: 'company', populate: { path: 'employees' } });
+
+
 
         if (!employee) {
             return res.status(404).json({
@@ -313,6 +314,17 @@ module.exports.employeeReview = async function (req, res) {
         }
 
 
+        employee.company.employees = employee.company.employees.filter((emp) => {
+            emp.password = undefined;
+
+            if (emp.id == employeeId) {
+                return false;
+            }
+
+            return user.adminRank < emp.adminRank;
+        })
+
+
         res.render('employee_review', {
             'title': 'ERS | Employee Review',
             'employee': true,
@@ -322,6 +334,94 @@ module.exports.employeeReview = async function (req, res) {
 
     } catch (error) {
         console.log('Error: Employee Review', error);
+        res.status(500).json({
+            message: 'Internal Server Error',
+            status: 'failure',
+            data: []
+        });
+    }
+}
+
+module.exports.askFeedback = async function (req, res) {
+    try {
+        const user = req.user;
+        const { recieverId, giverId } = req.body;
+
+        if (!recieverId || !giverId) {
+            return res.status(404).json({
+                message: 'Empaty field recieved',
+                status: 'failure',
+                data: []
+            });
+        }
+
+        const reciever = await User.findById(recieverId);
+        const giver = await User.findById(giverId);
+
+        if (!reciever || !giver || !reciever.company.equals(user.company) || !giver.company.equals(user.company) || reciever.adminRank < user.adminRank || giver.adminRank < user.adminRank) {
+
+
+            return res.status(401).json({
+                message: 'UnAuthorized request',
+                status: 'failure',
+                data: []
+            });
+        }
+
+        await User.findByIdAndUpdate(giverId, { $push: { feedbackPending: recieverId } });
+
+        return res.status(200).json({
+            message: 'feedback asked successfully',
+            status: 'successful',
+            data: []
+        });
+
+
+    } catch (error) {
+        console.log('Error: Ask feedback', error);
+        res.status(500).json({
+            message: 'Internal Server Error',
+            status: 'failure',
+            data: []
+        });
+    }
+}
+
+module.exports.cancelFeedback = async function (req, res) {
+    try {
+        const user = req.user;
+        const { recieverId, giverId } = req.body;
+
+        if (!recieverId || !giverId) {
+            return res.status(404).json({
+                message: 'Empaty field recieved',
+                status: 'failure',
+                data: []
+            });
+        }
+
+        const reciever = await User.findById(recieverId);
+        const giver = await User.findById(giverId);
+
+        if (!reciever || !giver || !reciever.company.equals(user.company) || !giver.company.equals(user.company) || reciever.adminRank < user.adminRank || giver.adminRank < user.adminRank) {
+            return res.status(401).json({
+                message: 'UnAuthorized request',
+                status: 'failure',
+                data: []
+            });
+        }
+
+        await User.findByIdAndUpdate(giverId, { $pull: { feedbackPending: recieverId } });
+
+        return res.status(200).json({
+            message: 'feedback cancel successfully',
+            status: 'successful',
+            data: []
+        });
+
+
+    } catch (error) {
+        console.log('Error: Cancel feedback', error);
         res.status(500).json({
             message: 'Internal Server Error',
             status: 'failure',
