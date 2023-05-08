@@ -2,6 +2,7 @@ console.log('employee review script loaded');
 
 
 const feedbackGiverList = document.getElementById('feedback-giver-list');
+const deleteEmployeeBtn = document.getElementById('delete-employee-btn');
 
 
 feedbackGiverList.addEventListener('click', async (e) => {
@@ -52,4 +53,45 @@ feedbackGiverList.addEventListener('click', async (e) => {
         }
 
     }
+})
+
+
+deleteEmployeeBtn.addEventListener('click', async (e) => {
+    swal({
+        title: "Delete Employee!",
+        text: "after deleting employee, its feedbacks and employee details will no longer available",
+        icon: "warning",
+        dangerMode: true,
+        buttons: true
+    }).then(async (value) => {
+        if (value) {
+
+
+            const response = await fetch('/user/employee', {
+                method: 'delete',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ 'employeeId': deleteEmployeeBtn.dataset.id })
+            })
+
+
+            const result = await response.json();
+
+            if (result.status == 'successful') {
+                swal({
+                    title: `${result.message}`,
+                    icon: 'success'
+                });
+
+                window.location.href = '/user/admin';
+
+            } else {
+                swal({
+                    title: `${result.message}`,
+                    icon: 'error'
+                })
+            }
+        }
+    })
 })

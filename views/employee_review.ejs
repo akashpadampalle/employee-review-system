@@ -42,10 +42,25 @@
             </div>
             <div class="m-3 d-flex justify-content-evenly">
                 <button type="button" class="btn btn-success" id="assign-feedback-btn" data-bs-toggle="modal" data-bs-target="#staticBackdrop"> Ask for feedbacks </button>
-                <button type="button" class="btn btn-danger" id="delete-employee-btn">Delete Employee</button>
+                <button type="button" class="btn btn-danger" id="delete-employee-btn" data-id="<%= empDetail._id %>">Delete Employee</button>
+            </div>
+
+            <div class="m-3">
+                <h3>Feedback Recieved</h3>
+                <% for( let index = 0; index < empDetail.feedbackRecieved.length; index++ ) { %>
+                    <div class="row">
+                        <div class="col-12 border rounded m-1 container">
+                          <p class="mb-0"><strong><%= empDetail.feedbackRecieved[index].sender.name %></strong> <span class="text-muted">(Rating: <%= empDetail.feedbackRecieved[index].rating %>/5)</span></p>
+                          <p class="mb-3"><%= empDetail.feedbackRecieved[index].log %></p>
+                        </div>
+                    </div>
+                      
+                <% } %>
             </div>
         </div>
+        
 
+        <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
         <script src="/js/employee_review.js"></script>
 
     <% } else { %>

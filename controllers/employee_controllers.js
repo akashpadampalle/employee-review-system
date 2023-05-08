@@ -1,4 +1,5 @@
 const Company = require('../models/company');
+const Feedback = require('../models/feedback');
 const User = require('../models/user');
 
 
@@ -172,7 +173,8 @@ module.exports.createCompany = async function (req, res) {
 
 module.exports.singout = function (req, res) {
     req.logout((err) => {
-        console.log(err);
+        if (err)
+            console.log(err);
     });
     res.redirect('/signin');
 }
@@ -198,6 +200,18 @@ module.exports.adminPanel = async function (req, res) {
 
 }
 
+module.exports.employeeView = async function (req, res) {
+
+    await res.locals.user.populate({ path: 'company', select: 'name' });
+    await res.locals.user.populate({ path: 'feedbackPending', select: 'name _id' })
+
+
+    if (req.user.type == 'admin') {
+        res.locals.admin = true;
+    }
+
+    res.render('employee_view', { 'title': 'ERS | Employee view' })
+}
 
 module.exports.makeAdmin = async function (req, res) {
     try {
@@ -293,8 +307,8 @@ module.exports.employeeReview = async function (req, res) {
         const employeeId = req.params.id;
 
         const employee = await User.findById(employeeId)
-            .select('-password').populate({ path: 'company', populate: { path: 'employees' } });
-
+            .select('-password').populate({ path: 'company', populate: { path: 'employees' } })
+            .populate({ path: 'feedbackRecieved', populate: { path: 'sender', select: 'name' } });
 
 
         if (!employee) {
@@ -341,6 +355,10 @@ module.exports.employeeReview = async function (req, res) {
         });
     }
 }
+
+
+
+// Feedbacks
 
 module.exports.askFeedback = async function (req, res) {
     try {
@@ -429,3 +447,158 @@ module.exports.cancelFeedback = async function (req, res) {
         });
     }
 }
+
+module.exports.submitFeedback = async function (req, res) {
+    try {
+
+        const { recieverId, log } = req.body;
+        let { rating } = req.body;
+
+        if (!recieverId || !log || !rating) {
+            return res.status(404).json({
+                message: 'Empaty field recieved',
+                status: 'failure',
+                data: []
+            });
+        }
+
+        const reciever = await User.findById(recieverId);
+
+        if (!reciever) {
+            return res.status(404).json({
+                message: 'Invalid reciever',
+                status: "failure",
+                data: []
+            });
+        }
+
+        // checking if user is allowed to give feedback
+        if (!req.user.feedbackPending.includes(recieverId)) {
+            return res.status(401).json({
+                message: 'User is not Authorized',
+                status: 'failure',
+                data: []
+            });
+        }
+
+        if (rating < 0) { rating = 0; }
+        else if (rating > 5) { rating = 5; }
+
+        // creating feedback
+        const feedback = await Feedback.create({
+            'reciever': recieverId,
+            'sender': req.user.id,
+            'log': log,
+            'rating': rating
+        })
+
+        // removing pending feedback id from sender
+        const user = await User.findByIdAndUpdate(req.user.id, { $pull: { 'feedbackPending': recieverId } });
+
+        // updating recievers rating and append feedback id to it
+        console.log('reciever.rating  - ', reciever.rating, '\nreciever.feedbackRecieved.length - ', reciever.feedbackRecieved.length, '\nrating - ', rating);
+        const newRating = ((reciever.rating * reciever.feedbackRecieved.length) + parseInt(rating)) / (reciever.feedbackRecieved.length + 1);
+        await User.findByIdAndUpdate(recieverId, { 'rating': newRating, $push: { 'feedbackRecieved': feedback.id } })
+
+        return res.status(200).json({
+            message: 'feedback submited successfully',
+            status: 'successful',
+            data: []
+        });
+
+    } catch (error) {
+        console.log('Error: submit feedback', error);
+        res.status(500).json({
+            message: 'Internal Server Error',
+            status: 'failure',
+            data: []
+        });
+    }
+}
+
+
+module.exports.deleteEmployee = async function (req, res) {
+
+    try {
+
+
+
+        const { employeeId } = req.body;
+
+
+        if (!employeeId) {
+            return res.status(404).json({
+                message: 'Empty employee id',
+                status: 'failure',
+                data: []
+            });
+        }
+
+        const employee = await User.findById(employeeId);
+
+        if (!employee) {
+            return res.status(404).json({
+                message: 'Invalide employee id',
+                status: 'failure',
+                data: []
+            });
+        }
+
+
+        if (!employee.company.equals(req.user.company) || employee.adminRank <= req.user.adminRank) {
+            return res.status(404).json({
+                message: 'Unauthorized access',
+                status: 'failure',
+                data: []
+            });
+        }
+
+        // deleting recieved feedbacks
+        await Feedback.deleteMany({ _id: { $in: employee.feedbackRecieved } });
+
+        // delete submited feedbacks
+        const submitedFeedbacks = await Feedback.find({ 'sender': employeeId });
+
+        for (let index = 0; index < submitedFeedbacks.length; index++) {
+
+            const sFeedback = await Feedback.findById(submitedFeedbacks[index]);
+            let recievedEmployee = await User.findById(sFeedback.reciever);
+            let newRating = undefined;
+
+            if (recievedEmployee.feedbackRecieved.length == 1) {
+                newRating = 0;
+            } else {
+                newRating = ((recievedEmployee.rating * recievedEmployee.feedbackRecieved.length) - parseInt(sFeedback.rating)) / (recievedEmployee.feedbackRecieved.length - 1);
+            }
+
+
+            recievedEmployee.rating = newRating;
+            recievedEmployee.feedbackRecieved.pull(sFeedback._id);
+
+            await recievedEmployee.save();
+
+            await Feedback.findByIdAndDelete(sFeedback.id);
+
+        }
+
+        await User.findByIdAndDelete(employeeId);
+
+        return res.status(200).json({
+            message: 'employee deleted successfully',
+            status: 'successful',
+            data: []
+        });
+
+    } catch (error) {
+        console.log('Error: DELETE EMPLOYEE ', error);
+        return res.status(500).json({
+            message: 'Internal Server Error',
+            status: 'failure',
+            data: []
+        });
+    }
+
+
+}
+
+
