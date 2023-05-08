@@ -1,3 +1,13 @@
+/**
+ * feedback schema to store feedback information 
+ * stores 
+ * 1. sender ObjectId
+ * 2. reciever ObjectId
+ * 3. log (feedback text)
+ * 4. rating of feedback (0-5)
+ */
+
+
 const mongoose = require('mongoose');
 
 const feedbackSchema = new mongoose.Schema({

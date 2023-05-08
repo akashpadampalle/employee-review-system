@@ -1,7 +1,7 @@
 const express = require('express');
 const expressLayouts = require('express-ejs-layouts');
 const path = require('path');
-const db = require('./configs/db_connection');
+const db = require('./configs/db_connection'); // database configuration file
 
 
 //passport and session requirements
@@ -22,7 +22,6 @@ app.use(express.json()); // convert json into javascript object
 app.use(express.urlencoded({ extended: true })); // decode encoded url request from client
 app.use(cookieParser());
 
-// static file
 
 // session setup
 app.use(session({
@@ -40,13 +39,13 @@ app.use(session({
     })
 }));
 
-
+// passport middlewares
 app.use(passport.initialize());
 app.use(passport.session());
 app.use(passport.setAuthenticatedUser);
 
 
-app.use(express.static(path.join(__dirname, 'public')));
+app.use(express.static(path.join(__dirname, 'public'))); // public | static file 
 
 // ejs setup
 app.use(expressLayouts);

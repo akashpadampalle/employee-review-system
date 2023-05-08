@@ -2,7 +2,16 @@ const Company = require('../models/company');
 const Feedback = require('../models/feedback');
 const User = require('../models/user');
 
-
+/**
+ * take name, email, password, confirm passowrd, company name from request body
+ * check if 
+ * 1. any field empty, 
+ * 2. password is not matching to confirm password, 
+ * 3. company is not present
+ * 4. user is already present
+ * if any of these condition is true then we return respose with failure
+ * otherwise we create employee (user) and return its data
+ */
 
 module.exports.createEmployee = async function (req, res) {
     try {
@@ -83,6 +92,17 @@ module.exports.createEmployee = async function (req, res) {
 }
 
 
+/**
+ * create company action controller
+ * takes name, email, password, confirm password, company name and company description form request body
+ * check if 
+ * 1. any of the field is empty
+ * 2. password and confirm password does not match
+ * 3. is company already exist with same name
+ * 4. is user is already present with same email
+ * if any of the condition is true we send response with failure status
+ * other wise we first create company with give name and description and then create user adding it into that company
+ */
 module.exports.createCompany = async function (req, res) {
 
     try {
@@ -170,7 +190,7 @@ module.exports.createCompany = async function (req, res) {
 
 }
 
-
+// signout (logout) user by using logout method given by passportjs
 module.exports.singout = function (req, res) {
     req.logout((err) => {
         if (err)
@@ -179,7 +199,14 @@ module.exports.singout = function (req, res) {
     res.redirect('/signin');
 }
 
-
+/**
+ * admin panel action controller - render admin panel
+ * check if user type if employee if it is true redirecting user to employee view
+ * otherwise findout its company and by using its company we find all employee of company
+ * then we filter this employees and removes the employees who has greater administration rank (user.adminRank < employee.adminRank)
+ * we send this employees in locals to for ejs
+ * another variable  we send to ejs is 'employee': true to add employee view link in header
+ */
 module.exports.adminPanel = async function (req, res) {
 
     if (req.user.type == 'employee') {
@@ -200,6 +227,12 @@ module.exports.adminPanel = async function (req, res) {
 
 }
 
+
+/**
+ * employee view  -- renders employee view
+ * populate company name and feedbackPending (employee id of other user which admin requested to give feedback on them)
+ * the we have another check to check if user is admin or not if it is admin then add 'admin = true' to set the admin panel link in header
+ */
 module.exports.employeeView = async function (req, res) {
 
     await res.locals.user.populate({ path: 'company', select: 'name' });
@@ -213,6 +246,15 @@ module.exports.employeeView = async function (req, res) {
     res.render('employee_view', { 'title': 'ERS | Employee view' })
 }
 
+
+/**
+ * make Admin -- promot employee to admin
+ * check if
+ * 1. employee id is valid or not
+ * 2. requesting user is not admin or  user is has lesser rank
+ * if any of the above condition is true then we return with failure response
+ * other wise we find that user and update its type to admin and set it rank acording to requesting admin (user)
+ */
 module.exports.makeAdmin = async function (req, res) {
     try {
 
@@ -255,7 +297,14 @@ module.exports.makeAdmin = async function (req, res) {
     }
 }
 
-
+/**
+ * make employee -- demote user from admin to employee
+ * check if 
+ * 1. employee is not valid
+ * 2. requesting user is not admin or its rank is lower that employee to modify
+ * if any of the above condition is true then we return with failure response
+ * otherwise we update employee type to employee and set its rank maximum number possible (lowest rank)
+ */
 module.exports.makeEmployee = async function (req, res) {
     try {
 

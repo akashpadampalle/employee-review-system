@@ -3,6 +3,14 @@ const localStrategy = require('passport-local').Strategy;
 
 const User = require('../models/user');
 
+/**
+ * using local strategy of passport js to validate user
+ * serialize user -- takes user and put its id into session cookie
+ * deserialize user -- decrypt user id and get user from its id
+ * checkAuthentication -- custom middleware to check if user if logged or not 
+ * setAuthenticatedUser -- if user is logged it takes user from request and put it into locals to use in ejs
+ */
+
 passport.use(new localStrategy({
     usernameField: 'email',
     passwordField: 'password',

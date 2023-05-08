@@ -16,16 +16,17 @@ router.get('/signup', homepageController.renderSignUpPage);
 router.get('/create-company', homepageController.renderCreateCompanyPage);
 
 // form submission
-router.post('/create-company', employeeController.createCompany);
+rosuter.post('/create-company', employeeController.createCompany);
 router.post('/create-employee', employeeController.createEmployee);
 router.post('/signin', passport.authenticate('local', {
     successRedirect: '/user/employee',
     failureRedirect: '/signup'
 }));
 
+// user logout route
 router.get('/signout', passport.checkAuthentication, employeeController.singout);
 
 
-router.use('/user', userRoutes);
+router.use('/user', userRoutes); // seperating /user routes to different file
 
 module.exports = router;
