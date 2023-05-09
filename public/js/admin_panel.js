@@ -3,7 +3,12 @@ console.log('admin panel script loaded');
 const employeeList = document.getElementById('employee-list');
 const serverWarning = document.getElementById('warning-by-server');
 
-
+/**
+ * add event lister to the employee list and then we takes action according to targates (event delegation)
+ * if make-admin-btn get clicked then create perticular employee to admin by using AJAX
+ * if make-employee-btn clicked we demote user from admin to employee
+ * if employee-list-item get clicked then we render employee review page
+ */
 employeeList.addEventListener('click', async (e) => {
     let target = e.target;
 

@@ -1,10 +1,14 @@
-<main>
+<%# # eployee view its like shows information of employee and list of feedbacks which need to be submitted %>
 
-    <div class="border rounded">
+    <main>
 
-        <div id="warning-by-server"></div>
+        <div class="border rounded">
 
-        <% if (locals.user) { %>
+            <div id="warning-by-server"></div>
+
+            <% if (locals.user) { %>
+
+            <%# user information %>
 
             <div id="user-info" class="p-3 border">
 
@@ -20,6 +24,8 @@
             
 
             </div>
+
+            <%# all pending feedbacks forms %>
 
             <div id="pending-feedback" class="container">
                 <h3>Pending Feedbacks</h3>

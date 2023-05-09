@@ -1,8 +1,10 @@
 <main>
     <% if(locals.empDetail){ %>
 
+        <%# Model 
+        # shows the list of employees to ask / cancel the feedback request
+        %>
 
-  <!-- Modal -->
         <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
             <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
             <div class="modal-content">
@@ -28,6 +30,9 @@
             </div>
         </div>
 
+        <%# employee details
+        # shows the employee details (name, email, type, rank and company)
+         %>
         <div class="border rounded">
             <div class="ps-3 border" >
                 <div id="employee-name"> <span>name: </span>  <span> <%= empDetail.name %> </span></div>
@@ -45,6 +50,9 @@
                 <button type="button" class="btn btn-danger" id="delete-employee-btn" data-id="<%= empDetail._id %>">Delete Employee</button>
             </div>
 
+            <%# recieved feedbacks
+            # show the list of feedbaks with giver name and rating with log message (feedback)
+             %>
             <div class="m-3">
                 <h3>Feedback Recieved</h3>
                 <% for( let index = 0; index < empDetail.feedbackRecieved.length; index++ ) { %>

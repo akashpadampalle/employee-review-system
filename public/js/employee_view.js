@@ -4,8 +4,20 @@ console.log('employee view script loaded');
 const feedbackForms = document.querySelectorAll('.feedback-form');
 const warningDiv = document.getElementById('warning-by-server');
 
+
+
+// add event listener to all pending feedback from 
 for (let i = 0; i < feedbackForms.length; i++) {
     feedbackForms[i].addEventListener('submit', async function (e) {
+
+        /**
+         * get the form data and submit it using AJAX
+         * if request is successful alert user with successful message and remove that form from DOM
+         * else shows the error message given by server
+         */
+
+        warningDiv.innerHTML = '';
+
         e.preventDefault();
         const formData = new FormData(this);
         const data = JSON.stringify(Object.fromEntries(formData));

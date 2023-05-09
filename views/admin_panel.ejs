@@ -1,8 +1,11 @@
-<main>
+<%# # shows the list of employees with toggle button to make admin or demote to employee # if any employee is not
+    present we show 'No employee Available' %>
 
-    <div id="warning-by-server"></div>
+    <main>
 
-    <% if(locals.employeesArr.length > 0) { %> 
+        <div id="warning-by-server"></div>
+
+        <% if(locals.employeesArr.length > 0) { %> 
     <ul class="list-group" id="employee-list">
       
         <% for( let index = 0; index < employeesArr.length; index++ ) { %>

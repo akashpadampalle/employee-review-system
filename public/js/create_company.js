@@ -3,6 +3,12 @@ console.log('create company scipt loaded');
 const formCreateCompany = document.getElementById("create-company-form");
 const warningDiv = document.getElementById("warnings-by-server");
 
+/**
+ * create company form submit listner using AJAX
+ * if request is successfull we show alert to login
+ * else shows the error message given from server
+ */
+
 formCreateCompany.addEventListener('submit', async (e) => {
     e.preventDefault();
 

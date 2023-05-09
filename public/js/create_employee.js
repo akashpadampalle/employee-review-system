@@ -3,6 +3,12 @@ console.log('create employee form script loaded');
 const createEmployeeForm = document.getElementById('create_employee_form');
 const warningDiv = document.getElementById("warnings-by-server");
 
+/**
+ * create employee form submit listner user AJAX
+ * if form submission is successful then we alter user to login
+ * else alert user by error message given by server
+ */
+
 createEmployeeForm.addEventListener('submit', async (e) => {
     e.preventDefault();
 

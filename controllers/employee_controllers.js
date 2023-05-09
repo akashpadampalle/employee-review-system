@@ -2,6 +2,7 @@ const Company = require('../models/company');
 const Feedback = require('../models/feedback');
 const User = require('../models/user');
 
+
 /**
  * take name, email, password, confirm passowrd, company name from request body
  * check if 
@@ -12,7 +13,6 @@ const User = require('../models/user');
  * if any of these condition is true then we return respose with failure
  * otherwise we create employee (user) and return its data
  */
-
 module.exports.createEmployee = async function (req, res) {
     try {
 
@@ -190,6 +190,7 @@ module.exports.createCompany = async function (req, res) {
 
 }
 
+
 // signout (logout) user by using logout method given by passportjs
 module.exports.singout = function (req, res) {
     req.logout((err) => {
@@ -198,6 +199,7 @@ module.exports.singout = function (req, res) {
     });
     res.redirect('/signin');
 }
+
 
 /**
  * admin panel action controller - render admin panel
@@ -297,6 +299,7 @@ module.exports.makeAdmin = async function (req, res) {
     }
 }
 
+
 /**
  * make employee -- demote user from admin to employee
  * check if 
@@ -348,6 +351,16 @@ module.exports.makeEmployee = async function (req, res) {
 }
 
 
+/**
+ * employee revies -- render employee review page (only for admin)
+ * takes employee id from params (request url)
+ * check if 
+ * 1. employee id is not valid
+ * 2. admin (user) belong to different company or rank lower
+ * if any of the condition is true then we return with failure response
+ * we filter employees list of company (to ask for feedback)
+ * set employe = true, admin = true to show admin panel link and employee view link to show in header section 
+ */
 module.exports.employeeReview = async function (req, res) {
     try {
 
@@ -409,6 +422,20 @@ module.exports.employeeReview = async function (req, res) {
 
 // Feedbacks
 
+
+/**
+ * ask feedback controller -> ask employee to give feedback to another employee
+ * takes the giver and reciever employee id from request body
+ * 
+ * check if 
+ * 1. any of the field is empty
+ * 2. any of given id is invalid or the admin and employee don't belong to same company
+ * 3. amin is lower rank than any of employee (reciever, giver)
+ * if any of the above condition is true we return with failure response
+ * 
+ * if it passes the all checks
+ * we cadd giver id to the reciever's pending feedback array (it will handle later)
+ */
 module.exports.askFeedback = async function (req, res) {
     try {
         const user = req.user;
@@ -454,6 +481,20 @@ module.exports.askFeedback = async function (req, res) {
     }
 }
 
+
+/**
+ * cancel feedback -> cancel asked feedback 
+ * takes the reciever and giver id from request body
+ * 
+ * checks if 
+ * 1. reciver or giver id is empty
+ * 2. any of the employee id is invalid or user (admin) doesn't belong to same company
+ * 2. user (admin) is lower rank than any of the employee
+ * if any of the condition is true then we return with failure response
+ * 
+ * if every thing goes right way
+ * we remove giver id from array of recievers pending feedbak and return from here
+ */
 module.exports.cancelFeedback = async function (req, res) {
     try {
         const user = req.user;
@@ -497,6 +538,22 @@ module.exports.cancelFeedback = async function (req, res) {
     }
 }
 
+
+/**
+ * submit feedback
+ * takes the reciever id, log (feedback message) and rating from user request body
+ * 
+ * checks if 
+ * 1. any of the field is empty
+ * 2. reciver id is invalid
+ * 3. giver is not autherized to give feedback (check pending array of giver)
+ * 4. formate rating put constrains on rating (0-5)
+ * if any of the above condition is true then we return with failure message
+ * 
+ * otherwise create feedback with gathered data
+ * remove reciever id from givers pending feedback array
+ * calculate recievers rating and update 
+ */
 module.exports.submitFeedback = async function (req, res) {
     try {
 
@@ -545,7 +602,6 @@ module.exports.submitFeedback = async function (req, res) {
         const user = await User.findByIdAndUpdate(req.user.id, { $pull: { 'feedbackPending': recieverId } });
 
         // updating recievers rating and append feedback id to it
-        console.log('reciever.rating  - ', reciever.rating, '\nreciever.feedbackRecieved.length - ', reciever.feedbackRecieved.length, '\nrating - ', rating);
         const newRating = ((reciever.rating * reciever.feedbackRecieved.length) + parseInt(rating)) / (reciever.feedbackRecieved.length + 1);
         await User.findByIdAndUpdate(recieverId, { 'rating': newRating, $push: { 'feedbackRecieved': feedback.id } })
 
@@ -566,6 +622,21 @@ module.exports.submitFeedback = async function (req, res) {
 }
 
 
+/**
+ * delete employee - delete employee from db and its associated feedbacks
+ * takes employee id from request body
+ * 
+ * check if
+ * 1. employee id is empty or invalid
+ * 2. user (admin) doesn't belong to employee company or it is lower rank than employee
+ * if any of the condition helds true then we return from here with failure response
+ * 
+ * if everything goes accordingly
+ * do,
+ * 1. delete all recieved feedbacks
+ * 2. delete all given feedbacks and recalculate the rating
+ * 3. delete all employee itself
+ */
 module.exports.deleteEmployee = async function (req, res) {
 
     try {
