@@ -16,7 +16,7 @@ router.get('/signup', homepageController.renderSignUpPage);
 router.get('/create-company', homepageController.renderCreateCompanyPage);
 
 // form submission
-rosuter.post('/create-company', employeeController.createCompany);
+router.post('/create-company', employeeController.createCompany);
 router.post('/create-employee', employeeController.createEmployee);
 router.post('/signin', passport.authenticate('local', {
     successRedirect: '/user/employee',
