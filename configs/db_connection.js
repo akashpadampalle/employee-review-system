@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 
-const url = 'mongodb://127.0.0.1:27017/employee_review_system'; // mongoodb url
+const url = process.env.ERS_DB_URI; // mongoodb url
 mongoose.connect(url); // connecting to db
 
 const db = mongoose.connection; // getting connection of db

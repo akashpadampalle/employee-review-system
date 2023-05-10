@@ -30,8 +30,6 @@ module.exports.renderSignInPage = function (req, res) {
 module.exports.renderSignUpPage = async function (req, res) {
     const company = await Company.find({}).select('-employees');
 
-    console.log(company);
-
     if (company.length > 0) {
         res.locals.company = company;
     }

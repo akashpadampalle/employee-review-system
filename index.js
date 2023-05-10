@@ -13,7 +13,7 @@ const MongoStore = require('connect-mongo');
 
 
 
-const PORT = process.env.PORT || 8000;
+const PORT = process.env.ERS_PORT;
 
 
 const app = express();
@@ -26,14 +26,14 @@ app.use(cookieParser());
 // session setup
 app.use(session({
     name: 'ERS',
-    secret: 'somescrete',
+    secret: process.env.ERS_SESSION_SECRETE,
     saveUninitialized: false,
     resave: false,
     cookie: {
         maxAge: 1000 * 60 * 60 * 24,
     },
     store: MongoStore.create({
-        mongoUrl: 'mongodb://127.0.0.1:27017/employee_review_system',
+        mongoUrl: process.env.ERS_DB_URI,
         collectionName: 'session',
         autoRemove: 'native'
     })
