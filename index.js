@@ -50,7 +50,7 @@ app.use(express.static(path.join(__dirname, 'public'))); // public | static file
 // ejs setup
 app.use(expressLayouts);
 app.set('view engine', 'ejs');
-app.set('views', 'views');
+app.set('views', './views');
 
 // extract scripts and styles from webpage body
 app.set('layout extractStyles', true);
