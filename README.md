@@ -22,4 +22,4 @@ Employee review system webapp is an online platform designed to assist companies
 
 ## Project live link
 
-link 👉 [https://employee-review-system-git-main-akashpadampalle.vercel.app/](https://employee-review-system-git-main-akashpadampalle.vercel.app/)
+👉 [https://employee-review-system-git-main-akashpadampalle.vercel.app/](https://employee-review-system-git-main-akashpadampalle.vercel.app/)
