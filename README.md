@@ -30,10 +30,11 @@ Employee review system webapp is an online platform designed to assist companies
 ### home page
 - Introduction
 - links for signin, signup, create company
-![ers_homepage](https://github.com/akashpadampalle/employee-review-system/assets/45806342/53824ed6-b362-425e-8e06-c0fe7fdbf1aa)
-
-
-
+![ers_homepage](https://github.com/akashpadampalle/employee-review-system/assets/45806342/53824ed6-b362-425e-8e06-c0fe7fdbf1aa)  
+  
+    
+      
+      
 ### signin Page
 ![ers_signin_page](https://github.com/akashpadampalle/employee-review-system/assets/45806342/26a017ba-8eb0-4419-b2e0-fce74524bd64)
 
