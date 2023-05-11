@@ -34,31 +34,29 @@ Employee review system webapp is an online platform designed to assist companies
   
     
       
-      
 ### signin Page
 ![ers_signin_page](https://github.com/akashpadampalle/employee-review-system/assets/45806342/26a017ba-8eb0-4419-b2e0-fce74524bd64)
-
-
-
+   
+      
+      
 ### signup page
 ![ers_signup_page](https://github.com/akashpadampalle/employee-review-system/assets/45806342/1d4b1e9b-b8f9-4872-9055-392fa89d642b)
-
-
-
+  
+    
+    
 ### create company page
 create company ( group ) to manage its employee efficiently
 ![ers_create_company](https://github.com/akashpadampalle/employee-review-system/assets/45806342/c1c48090-95c7-4070-909a-8b2f9d1b3b00)
-
-
-
+  
+    
+    
 ### admin panel
 - list all available employees
 - promot/demote buttons
 ![ers_admin_panel](https://github.com/akashpadampalle/employee-review-system/assets/45806342/4f6ac91f-4282-4935-90ed-b4c00e969749)
-
-
-
-
+  
+    
+    
 ### employee review page 
 - only admin can access
 - list user information
@@ -66,16 +64,16 @@ create company ( group ) to manage its employee efficiently
 - delete user button
 - list of feedback received
 ![employee_review_page](https://github.com/akashpadampalle/employee-review-system/assets/45806342/f7adb22a-f515-4ab8-b2bd-d18d2132eadc)
-
-
-
+  
+    
+    
 ### ask feedback dialog box
 - list of employees who can give feedback
 - ask/cancel button to ask or cancel feedback
 ![ask_feedback_dialog](https://github.com/akashpadampalle/employee-review-system/assets/45806342/29fb769f-312d-44ce-ab46-6612fc64d15d)
-
-
-
+  
+    
+    
 ### employee view page
 - for employee only
 - list of emplyee infromation
