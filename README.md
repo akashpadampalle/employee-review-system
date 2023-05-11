@@ -6,8 +6,7 @@ Employee review system webapp is an online platform designed to assist companies
 
 **Client:** 
 
-| ![ejs](https://github.com/akashpadampalle/habit-tracker/assets/45806342/50ae74f1-f883-46f1-a5ac-e85fa13a660c "ejs")  |   ![bootstrap](https://github.com/akashpadampalle/employee-review-system/assets/45806342/370f79cf-50a9-4fd7-baa0-f5f02e3328da)
-   | ![javascript](https://github.com/akashpadampalle/habit-tracker/assets/45806342/44a16bc9-02ee-4235-85a9-354d9ba4f555 "javascript")                      |
+| ![ejs](https://github.com/akashpadampalle/habit-tracker/assets/45806342/50ae74f1-f883-46f1-a5ac-e85fa13a660c "ejs")  |   ![bootstrap](https://github.com/akashpadampalle/employee-review-system/assets/45806342/370f79cf-50a9-4fd7-baa0-f5f02e3328da) | ![javascript](https://github.com/akashpadampalle/habit-tracker/assets/45806342/44a16bc9-02ee-4235-85a9-354d9ba4f555 "javascript")                      |
 | :-------- | :------- | :------------------------------- |
 | `ejs`   | `bootstrap` | `javascript` |
 
